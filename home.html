@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Space</title>
+
+<style>
+
+/* ===== BODY ===== */
+
+body{
+margin:0;
+font-family:system-ui;
+background:radial-gradient(circle at top,#0a0a1a,#000);
+color:white;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+}
+
+/* ===== TWINKLING STARS ===== */
+
+.stars{
+position:absolute;
+width:100%;
+height:100%;
+top:0;
+left:0;
+overflow:hidden;
+z-index:0;
+}
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite ease-in-out;
+}
+
+@keyframes twinkle{
+0%,100%{opacity:0.2}
+50%{opacity:1}
+}
+
+/* ===== CONTAINER ===== */
+
+.container{
+width:90%;
+max-width:380px;
+z-index:2;
+text-align:center;
+}
+
+/* ===== TITLE ===== */
+
+.title{
+font-size:26px;
+font-weight:500;
+margin-bottom:8px;
+letter-spacing:1px;
+}
+
+.subtitle{
+font-size:13px;
+opacity:.7;
+margin-bottom:25px;
+min-height:18px;
+}
+
+/* ===== GRID ===== */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:14px;
+}
+
+/* ===== CARD ===== */
+
+.card{
+display:flex;
+border-radius:14px;
+overflow:hidden;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+transition:.25s;
+}
+
+.card:active{
+transform:scale(.95);
+}
+
+/* LEFT */
+
+.left{
+flex:8;
+padding:14px;
+background:linear-gradient(90deg,#6a5cff,#9a7bff);
+text-align:left;
+}
+
+/* RIGHT */
+
+.right{
+flex:2;
+background:white;
+color:black;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:18px;
+}
+
+/* TEXT */
+
+.cardTitle{
+font-size:14px;
+}
+
+/* COLORS */
+
+.c1 .left{background:linear-gradient(90deg,#ff4d6d,#ff758f);}
+.c2 .left{background:linear-gradient(90deg,#6a5cff,#9a7bff);}
+.c3 .left{background:linear-gradient(90deg,#00c9a7,#00e4b8);}
+.c4 .left{background:linear-gradient(90deg,#f7971e,#ffd200);}
+.c5 .left{background:linear-gradient(90deg,#36d1dc,#5b86e5);}
+.c6 .left{background:linear-gradient(90deg,#ff6a00,#ffb347);}
+
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+
+<div class="title">Aapka Safe Space</div>
+<div class="subtitle" id="quote">Loading...</div>
+
+<div class="grid">
+
+<div class="card c1" onclick="go('diary.html')">
+<div class="left"><div class="cardTitle">Diary</div></div>
+<div class="right">→</div>
+</div>
+
+<div class="card c2" onclick="go('date.html')">
+<div class="left"><div class="cardTitle">VR Date</div></div>
+<div class="right">→</div>
+</div>
+
+<div class="card c3" onclick="go('openif.html')">
+<div class="left"><div class="cardTitle">For you</div></div>
+<div class="right">→</div>
+</div>
+
+<div class="card c4" onclick="go('collage.html')">
+<div class="left"><div class="cardTitle">collage</div></div>
+<div class="right">→</div>
+</div>
+
+<div class="card c5" onclick="go('section5.html')">
+<div class="left"><div class="cardTitle">Mood</div></div>
+<div class="right">→</div>
+</div>
+
+<div class="card c6" onclick="go('secret.html')">
+<div class="left"><div class="cardTitle">secret</div></div>
+<div class="right">→</div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* ===== NAV ===== */
+
+function go(page){
+if(page !== "#"){
+window.location.href = page
+}
+}
+
+/* ===== TWINKLING STARS GENERATOR ===== */
+
+const starsContainer = document.getElementById("stars")
+
+for(let i=0;i<80;i++){
+
+let star=document.createElement("div")
+star.className="star"
+
+star.style.top=Math.random()*100+"%"
+star.style.left=Math.random()*100+"%"
+star.style.animationDelay=Math.random()*2+"s"
+
+starsContainer.appendChild(star)
+}
+
+/* ===== ROMANTIC QUOTES API ===== */
+
+async function loadQuote(){
+
+try{
+
+let res=await fetch("https://api.quotable.io/random?tags=love")
+let data=await res.json()
+
+document.getElementById("quote").innerText = data.content
+
+}catch{
+
+let fallback = [
+"it felt like something.",
+"you didn’t go unnoticed.",
+"this wasn’t nothing.",
+"somehow, it stayed.",
+"you exist differently.",
+
+"not everything needs a reason.",
+"this didn’t just pass.",
+"it was quiet… but real.",
+"something about this stayed.",
+"you were part of this.",
+
+"it made sense in its own way.",
+"this wasn’t supposed to matter.",
+"it still does, though.",
+"some things don’t leave.",
+"this had a feeling to it.",
+
+"not loud, but enough.",
+"it didn’t ask to stay… but it did.",
+"this wasn’t just another thing.",
+"you’ll get it someday.",
+"it meant more than it looked.",
+
+"this wasn’t random at all.",
+"it stayed longer than expected.",
+"there was something here.",
+"it felt… right.",
+"not everything fades.",
+"it didn’t just happen.",
+"this had weight to it.",
+"you were in this, somehow.",
+"it lingered a little longer.",
+"this wasn’t easy to ignore.",
+
+"it left something behind.",
+"this felt different, quietly.",
+"not everything passes like this.",
+"it stayed without trying.",
+"there was more to this.",
+
+"this didn’t feel temporary.",
+"it held on in a way.",
+"you don’t just miss this.",
+"this wasn’t light.",
+"it settled somewhere.",
+
+"this had its own place.",
+"it didn’t rush… it stayed.",
+"something here mattered.",
+"it didn’t fade like others.",
+"this wasn’t forgettable.",
+
+"it stayed in small ways.",
+"this felt closer than usual.",
+"it wasn’t just a moment.",
+"this didn’t blur out.",
+"it stayed where it shouldn’t have.",
+
+"it had a quiet pull.",
+"this wasn’t easy to leave.",
+"it felt heavier than expected.",
+"this didn’t slip away.",
+"it stayed in pieces.",
+
+"this wasn’t just there.",
+"it carried something with it.",
+"this had a reason, maybe.",
+"it didn’t pass unnoticed.",
+"this stayed longer than it should."
+];
+
+document.getElementById("quote").innerText =
+fallback[Math.floor(Math.random()*fallback.length)]
+
+}
+
+}
+
+loadQuote()
+
+</script>
+
+</body>
+</html>

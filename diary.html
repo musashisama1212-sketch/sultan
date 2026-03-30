@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Diary</title>
+
+<style>
+
+body{
+margin:0;
+padding:25px;
+font-family:Segoe UI,sans-serif;
+background:black;
+color:white;
+overflow-x:hidden;
+}
+
+/* stars */
+
+.star{
+position:fixed;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite alternate;
+z-index:-1;
+}
+
+@keyframes twinkle{
+0%{opacity:.3}
+100%{opacity:1;box-shadow:0 0 8px white}
+}
+
+/* heading */
+
+h1{
+
+font-size:28px;
+font-weight:500;
+
+letter-spacing:2px;
+
+text-align:center;
+
+background:linear-gradient(90deg,#fff,#d6c7ff,#fff);
+background-size:200%;
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+animation:titleFlow 6s linear infinite;
+
+margin-bottom:10px;
+
+}
+
+@keyframes titleFlow{
+0%{background-position:0%}
+100%{background-position:200%}
+}
+
+/* calm message */
+
+.message{
+
+text-align:center;
+
+font-size:13px;
+
+line-height:1.5;
+
+max-width:500px;
+
+margin:0 auto 25px auto;
+
+color:#d9d2ff;
+
+opacity:.85;
+
+}
+
+/* home button */
+
+.home-btn{
+
+position:absolute;
+
+top:18px;
+left:18px;
+
+padding:7px 14px;
+
+border:none;
+
+border-radius:6px;
+
+background:linear-gradient(135deg,#6a003a,#5b2cff);
+
+color:white;
+
+font-size:12px;
+
+cursor:pointer;
+
+}
+
+/* form */
+
+.form{
+
+max-width:600px;
+
+margin:auto;
+
+}
+
+/* inputs */
+
+input,textarea{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+border-radius:8px;
+
+border:1px solid rgba(255,255,255,.25);
+
+background:rgba(25,15,40,.85);
+
+color:white;
+
+font-size:14px;
+
+outline:none;
+
+transition:.25s;
+
+}
+
+/* glow while typing */
+
+input:focus, textarea:focus{
+
+border:1px solid #a070ff;
+
+box-shadow:0 0 10px rgba(160,110,255,.7);
+
+background:rgba(35,20,55,.95);
+
+}
+
+textarea{
+height:130px;
+resize:none;
+}
+
+/* save button */
+
+.save-btn{
+
+margin-top:12px;
+
+padding:10px 18px;
+
+border:none;
+
+border-radius:6px;
+
+background:linear-gradient(135deg,#7b0044,#6b3cff);
+
+color:white;
+
+font-size:14px;
+
+cursor:pointer;
+
+}
+
+/* entries */
+
+#entries{
+
+max-width:600px;
+
+margin:35px auto;
+
+}
+
+/* entry card */
+
+.entry{
+
+background:rgba(30,15,50,.75);
+
+border:1px solid rgba(255,255,255,.12);
+
+border-radius:10px;
+
+padding:16px;
+
+margin-top:16px;
+
+display:flex;
+
+justify-content:space-between;
+
+gap:15px;
+
+}
+
+/* entry content */
+
+.entry-content{
+flex:1;
+}
+
+/* entry title */
+
+.entry-title{
+
+font-size:16px;
+
+margin-bottom:4px;
+
+color:#f0cfff;
+
+}
+
+/* entry text */
+
+.entry-text{
+
+font-size:14px;
+
+line-height:1.5;
+
+color:#eee;
+
+}
+
+/* date */
+
+.date{
+
+font-size:11px;
+
+color:#c9b8ff;
+
+text-align:right;
+
+min-width:90px;
+
+}
+
+/* buttons */
+
+.actions button{
+
+margin-top:6px;
+
+margin-right:6px;
+
+border:none;
+
+padding:6px 10px;
+
+border-radius:5px;
+
+cursor:pointer;
+
+font-size:12px;
+
+background:#3c2a7a;
+
+color:white;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<button class="home-btn" onclick="location.href='home.html'">Home</button>
+
+<h1>Personal Diary</h1>
+
+<div class="message">
+This is your private space. Write whatever you feel here —  
+no one will judge you, and no one can access this page not even me.
+</div>
+
+<div class="form">
+
+<input id="title" placeholder="Entry title">
+
+<textarea id="entryText" placeholder="Write your thoughts..."></textarea>
+
+<button class="save-btn" onclick="addEntry()">Save Entry</button>
+
+</div>
+
+<div id="entries"></div>
+
+<script>
+
+/* stars */
+
+for(let i=0;i<120;i++){
+let s=document.createElement("div")
+s.className="star"
+s.style.top=Math.random()*100+"vh"
+s.style.left=Math.random()*100+"vw"
+document.body.appendChild(s)
+}
+
+/* storage */
+
+let entries=JSON.parse(localStorage.getItem("diaryEntries")) || []
+
+function saveData(){
+localStorage.setItem("diaryEntries",JSON.stringify(entries))
+}
+
+/* display */
+
+function displayEntries(){
+
+const container=document.getElementById("entries")
+container.innerHTML=""
+
+entries.forEach((entry,index)=>{
+
+const div=document.createElement("div")
+div.className="entry"
+
+div.innerHTML=`
+
+<div class="entry-content">
+
+<div class="entry-title">${entry.title}</div>
+
+<div class="entry-text">${entry.text}</div>
+
+<div class="actions">
+<button onclick="editEntry(${index})">Edit</button>
+<button onclick="deleteEntry(${index})">Delete</button>
+</div>
+
+</div>
+
+<div class="date">
+
+${entry.day}<br>
+${entry.date}
+
+</div>
+
+`
+
+container.appendChild(div)
+
+})
+
+}
+
+/* create */
+
+function addEntry(){
+
+const title=document.getElementById("title").value.trim()
+const text=document.getElementById("entryText").value.trim()
+
+if(!title || !text){
+alert("Please write title and entry")
+return
+}
+
+const now=new Date()
+
+entries.push({
+
+title:title,
+text:text,
+date:now.toLocaleDateString(),
+day:now.toLocaleDateString(undefined,{weekday:"long"})
+
+})
+
+saveData()
+displayEntries()
+
+document.getElementById("title").value=""
+document.getElementById("entryText").value=""
+
+}
+
+/* edit */
+
+function editEntry(index){
+
+const updated=prompt("Edit entry:",entries[index].text)
+
+if(updated){
+
+entries[index].text=updated
+
+saveData()
+displayEntries()
+
+}
+
+}
+
+/* delete */
+
+function deleteEntry(index){
+
+entries.splice(index,1)
+
+saveData()
+displayEntries()
+
+}
+
+/* load */
+
+displayEntries()
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,429 @@
+```html
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Theater Date - M155 YOU ❤️</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* BLACKOUT */
+#blackout{
+  position:fixed;
+  inset:0;
+  background:black;
+  z-index:999;
+  animation:fadeOut 1s forwards;
+  animation-delay:1s;
+}
+@keyframes fadeOut{
+  to{opacity:0;visibility:hidden;}
+}
+
+/* FLICKER */
+.flicker{
+  position:absolute;
+  inset:0;
+  background:rgba(255,255,255,0.03);
+  animation:flicker .1s infinite alternate;
+  pointer-events:none;
+}
+@keyframes flicker{
+  from{opacity:.3}
+  to{opacity:.1}
+}
+
+/* FLAGS */
+.bunting{
+  position:absolute;
+  top:0;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  opacity:0;
+  transition:1s;
+}
+.flag{
+  border-left:20px solid transparent;
+  border-right:20px solid transparent;
+  border-bottom:40px solid;
+  animation:sway 6s infinite;
+}
+.flag:nth-child(1){border-bottom-color:#ff4757;}
+.flag:nth-child(2){border-bottom-color:#1e90ff;}
+.flag:nth-child(3){border-bottom-color:#ffd32a;}
+.flag:nth-child(4){border-bottom-color:#2ed573;}
+.flag:nth-child(5){border-bottom-color:#ffa502;}
+
+@keyframes sway{
+  0%,100%{transform:rotate(0)}
+  50%{transform:rotate(6deg)}
+}
+
+/* SCREEN */
+.reel-frame{
+  position:absolute;
+  top:35%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:88%;
+  max-width:780px;
+  aspect-ratio:16/9;
+  background:#111;
+  border:18px solid #222;
+  box-shadow:
+  0 0 40px #fff,
+  0 0 80px rgba(255,255,255,.4),
+  inset 0 0 80px rgba(255,255,255,.2);
+  opacity:0;
+  transition:1s;
+}
+
+/* VIDEO */
+video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:1.5s;
+}
+video.playing{opacity:1}
+
+/* COUNTDOWN */
+.countdown{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10vw;
+  font-weight:900;
+  color:white;
+  opacity:0;
+}
+
+/* POPCORN */
+.popcorn{
+  position:absolute;
+  bottom:18%;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:6rem;
+  opacity:0;
+  transition:1s;
+}
+
+/* BUTTON */
+.eat-btn{
+  position:absolute;
+  bottom:10%;
+  left:50%;
+  transform:translateX(-50%);
+  padding:8px 20px;
+  background:#ff4757;
+  color:white;
+  border-radius:999px;
+  opacity:0;
+  transition:0.2s;
+  z-index:1000;
+  cursor:pointer;
+}
+.eat-btn:active{
+  transform:translateX(-50%) scale(0.9);
+}
+
+/* HOME */
+.home-btn{
+  position:absolute;
+  top:15px;
+  right:15px;
+  padding:6px 16px;
+  background:rgba(255,255,255,.1);
+  border-radius:999px;
+  color:white;
+}
+
+/* START BUTTON */
+#startBtn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  padding:12px 28px;
+  background:white;
+  color:black;
+  border-radius:999px;
+  font-weight:bold;
+  z-index:100;
+  cursor:pointer;
+}
+
+/* CHAT BOX CENTER */
+#endBox{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:260px;
+  height:260px;
+  padding:16px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(18px);
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  color:white;
+  opacity:0;
+  z-index:50;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+}
+
+.chat{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.msg{
+  padding:8px 12px;
+  border-radius:14px;
+  max-width:80%;
+  font-size:0.85rem;
+  animation: panUp 0.4s ease;
+}
+
+@keyframes panUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+.me{
+  align-self:flex-end;
+  background:#ff4757;
+}
+
+.her{
+  align-self:flex-start;
+  background:rgba(255,255,255,0.2);
+}
+
+/* CHOICE BUTTON */
+.choice-btn{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  bottom:18%;
+  padding:6px 14px;
+  font-size:0.8rem;
+  background:#ff4757;
+  color:white;
+  border-radius:999px;
+  cursor:pointer;
+  opacity:0;
+  transition:0.3s;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="blackout"></div>
+
+<div id="startBtn">Start Movie</div>
+
+<button class="home-btn" onclick="location.href='home.html'">🏠</button>
+
+<div id="bunting" class="bunting">
+<div class="flag"></div><div class="flag"></div><div class="flag"></div>
+<div class="flag"></div><div class="flag"></div>
+</div>
+
+<div id="screen" class="reel-frame">
+<div id="countdown" class="countdown">3</div>
+<video id="video">
+<source src="film.mp4" type="video/mp4">
+</video>
+</div>
+
+<div id="popcorn" class="popcorn">🍿</div>
+<button id="eatBtn" class="eat-btn">Eat 🍿</button>
+
+<div id="endBox">
+  <div id="chat" class="chat"></div>
+</div>
+
+<div class="flicker"></div>
+
+<script>
+
+const video=document.getElementById('video')
+const countdown=document.getElementById('countdown')
+const bunting=document.getElementById('bunting')
+const screen=document.getElementById('screen')
+const popcorn=document.getElementById('popcorn')
+const eatBtn=document.getElementById('eatBtn')
+const startBtn=document.getElementById('startBtn')
+const endBox=document.getElementById('endBox')
+const chat=document.getElementById('chat')
+
+function addMsg(text,type){
+  const div=document.createElement("div")
+  div.className="msg "+type
+  div.innerText=text
+  chat.appendChild(div)
+}
+
+function showChoice(text, callback){
+  const btn=document.createElement("div")
+  btn.className="choice-btn"
+  btn.innerText=text
+  document.body.appendChild(btn)
+
+  setTimeout(()=>btn.style.opacity=1,100)
+
+  btn.onclick=()=>{
+    const rect = btn.getBoundingClientRect()
+
+    btn.style.position="fixed"
+    btn.style.left = rect.left + "px"
+    btn.style.top = rect.top + "px"
+
+    setTimeout(()=>{
+      btn.style.left="50%"
+      btn.style.top="50%"
+      btn.style.transform="translate(-50%,-50%) scale(0.8)"
+    },10)
+
+    setTimeout(()=>{
+      btn.remove()
+      addMsg(text,"her")
+      if(callback) callback()
+    },300)
+  }
+}
+
+/* START */
+startBtn.onclick=()=>{
+startBtn.style.display="none"
+
+setTimeout(()=>bunting.style.opacity=1,500)
+setTimeout(()=>screen.style.opacity=1,1500)
+setTimeout(()=>countdown.style.opacity=1,2500)
+
+setTimeout(()=>{
+let c=3
+const i=setInterval(()=>{
+c--
+if(c>0){
+countdown.innerText=c
+}else{
+clearInterval(i)
+countdown.style.opacity=0
+
+video.play()
+video.classList.add('playing')
+
+setTimeout(()=>popcorn.style.opacity=1,1000)
+setTimeout(()=>eatBtn.style.opacity=1,2000)
+}
+},1200)
+},2500)
+}
+
+/* POPCORN */
+eatBtn.onclick=()=>{
+const rect = popcorn.getBoundingClientRect()
+
+const e=document.createElement('div')
+e.textContent='😋'
+e.style.position='fixed'
+e.style.left = rect.left + rect.width/2 + "px"
+e.style.top = rect.top - 10 + "px"
+e.style.transform='translate(-50%,0)'
+e.style.fontSize='18px'
+e.style.opacity='1'
+e.style.zIndex='9999'
+e.style.pointerEvents='none'
+
+document.body.appendChild(e)
+
+requestAnimationFrame(()=>{
+  e.style.transition="transform 0.6s ease-out, opacity 0.6s ease-out"
+  e.style.transform="translate(-50%,-30px)"
+  e.style.opacity="0"
+})
+
+setTimeout(()=>e.remove(),600)
+}
+
+/* VIDEO END */
+video.onended=()=>{
+
+setTimeout(()=>{
+document.querySelectorAll("body > *:not(#endBox)").forEach(el=>{
+el.style.opacity="0"
+el.style.transition="1s"
+})
+
+setTimeout(()=>{
+endBox.style.opacity=1
+
+addMsg("ab ghar chalein?","me")
+
+setTimeout(()=>{
+showChoice("itti jaldi?",()=>{
+
+  setTimeout(()=>{
+  addMsg("ye last date nahi hai dw dobara aajayenge","me")
+
+  setTimeout(()=>{
+  showChoice("okay🥹",()=>{
+
+    const blackout=document.createElement("div")
+    blackout.style.position="fixed"
+    blackout.style.inset="0"
+    blackout.style.background="black"
+    blackout.style.opacity="0"
+    blackout.style.transition="1s"
+    blackout.style.zIndex="999"
+
+    document.body.appendChild(blackout)
+
+    setTimeout(()=>blackout.style.opacity="1",50)
+
+    setTimeout(()=>{
+      window.location.href="home.html"
+    },2000)
+
+  })
+  },800)
+
+  },500)
+
+})
+},1200)
+
+},1000)
+
+},1000)
+
+}
+
+</script>
+
+</body>
+</html>
+```

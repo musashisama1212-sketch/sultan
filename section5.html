@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mood Experience</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #1a0f2e, #050308);
+  color: white;
+  transition: background 1.8s ease;
+  overflow-x: hidden;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Home Button */
+.home-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  padding: 8px 16px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  color: white;
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.3s ease;
+}
+
+.home-btn:active {
+  background: rgba(255,255,255,0.25);
+  transform: scale(0.95);
+}
+
+/* Main Box - Centered + Professional Whitish Glow */
+.container {
+  width: 92%;
+  max-width: 420px;
+  padding: 32px 26px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 8px 40px rgba(0, 0, 0, 0.35),
+    0 0 35px rgba(255, 255, 255, 0.12),     /* Subtle whitish glow */
+    inset 0 2px 12px rgba(255, 255, 255, 0.08);
+  transition: all 0.4s ease;
+}
+
+/* Question Animation */
+.container.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+h2 {
+  font-size: 21.5px;
+  margin-bottom: 26px;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+button {
+  padding: 16px 12px;
+  border-radius: 18px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  touch-action: manipulation;
+}
+
+button:active {
+  transform: scale(0.96);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Center Text */
+.center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 88%;
+  max-width: 400px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.glow-text {
+  text-shadow: 0 0 20px rgba(255,255,255,0.7), 0 0 40px rgba(255, 180, 255, 0.5);
+  font-weight: 600;
+  letter-spacing: 0.6px;
+}
+
+/* Result Screen */
+.result {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(14px);
+  display: none;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px 100px;
+  overflow-y: auto;
+  animation: fadeInResult 1s ease forwards;
+}
+
+@keyframes fadeInResult {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.card {
+  width: 100%;
+  max-width: 660px;
+  padding: 42px 28px;
+  border-radius: 32px;
+  background: rgba(12, 12, 28, 0.93);
+  backdrop-filter: blur(42px);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.65);
+}
+
+.title {
+  font-size: 29px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.score-text {
+  font-size: 18px;
+  text-align: center;
+  opacity: 0.85;
+  margin-bottom: 18px;
+}
+
+.mood-name {
+  font-size: 27px;
+  font-weight: 700;
+  text-align: center;
+  padding: 16px 34px;
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(15px);
+  border-radius: 60px;
+  display: inline-block;
+  margin: 22px auto 36px;
+  box-shadow: 0 0 35px rgba(255,255,255,0.35),
+              inset 0 2px 8px rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.25);
+  letter-spacing: 0.8px;
+}
+
+.section {
+  margin-top: 34px;
+}
+
+.label {
+  font-size: 13.5px;
+  opacity: 0.78;
+  margin-bottom: 9px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+}
+
+.text {
+  font-size: 15.8px;
+  line-height: 1.76;
+  opacity: 0.94;
+}
+
+.songs {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.song a {
+  color: #ff9cf5;
+  text-decoration: none;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 16px;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.song a:active {
+  background: rgba(255, 156, 245, 0.25);
+  transform: translateX(6px);
+}
+
+.restart-btn, .home-result-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 16px;
+  font-size: 16.5px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.16);
+  color: white;
+  border: none;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.home-result-btn {
+  margin-top: 12px;
+  background: rgba(255,255,255,0.10);
+}
+
+.restart-btn:active, .home-result-btn:active {
+  background: rgba(255,255,255,0.28);
+  transform: scale(0.98);
+}
+/* ================= MOBILE RESPONSIVENESS (NO DESIGN CHANGE) ================= */
+
+@media (max-width: 480px) {
+
+  .container {
+    width: 94%;
+    padding: 22px 18px;
+  }
+
+  h2 {
+    font-size: 18px;
+    line-height: 1.3;
+  }
+
+  .options {
+    gap: 10px;
+  }
+
+  button {
+    padding: 12px 8px;
+    font-size: 13.5px;
+  }
+
+  .center {
+    width: 92%;
+  }
+
+  .card {
+    padding: 28px 18px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .score-text {
+    font-size: 15px;
+  }
+
+  .mood-name {
+    font-size: 21px;
+    padding: 12px 22px;
+  }
+
+  .text {
+    font-size: 14.5px;
+    line-height: 1.65;
+  }
+
+  .song a {
+    padding: 10px 14px;
+    font-size: 13.5px;
+  }
+
+  .restart-btn, .home-result-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 360px) {
+
+  h2 {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 12px;
+    padding: 10px 6px;
+  }
+
+  .title {
+    font-size: 21px;
+  }
+
+  .text {
+    font-size: 13.5px;
+  }
+
+}
+</style>
+</head>
+<body>
+
+<a href="home.html" class="home-btn">Home</a>
+
+<div class="container" id="box">
+  <h2 id="q"></h2>
+  <div class="options" id="opt"></div>
+</div>
+
+<div class="center" id="center"></div>
+
+<script>
+// ==================== QUESTIONS (Logical Order - No Change) ====================
+const questions = [
+  ["How is your energy level today?", ["Very Low",1], ["Low",2], ["Moderate",3], ["High",4]],
+  ["How was your sleep quality last night?", ["Poor",1], ["Average",2], ["Good",3], ["Excellent",4]],
+  ["How is your mental clarity?", ["Very Foggy",1], ["Somewhat Clear",2], ["Clear",3], ["Crystal Clear",4]],
+  ["How is your focus and concentration?", ["Very Poor",1], ["Distracted",2], ["Okay",3], ["Sharp",4]],
+  ["What is your motivation level?", ["None",1], ["Low",2], ["Moderate",3], ["High",4]],
+  ["How productive are you feeling?", ["Not at all",1], ["Low",2], ["Decent",3], ["Very High",4]],
+  ["How stable is your mood?", ["Very Unstable",1], ["Somewhat Unstable",2], ["Stable",3], ["Very Stable",4]],
+  ["How much overthinking are you doing?", ["Extreme",1], ["Frequent",2], ["Moderate",3], ["Very Little",4]],
+  ["How are you feeling socially?", ["Withdrawing",1], ["Minimal",2], ["Normal",3], ["Very Social",4]],
+  ["How irritable or angry do you feel today?", ["Very Irritable",1], ["Somewhat",2], ["Mild",3], ["Not at all",4]],
+  ["How much physical tension or restlessness do you have?", ["A lot",1], ["Moderate",2], ["Little",3], ["None",4]],
+  ["How is your appetite today?", ["Poor/No appetite",1], ["Low",2], ["Normal",3], ["Very Good",4]],
+  ["Overall, how are you feeling today?", ["Heavy & Drained",1], ["Low",2], ["Balanced",3], ["Great",4]],
+  ["How hopeful do you feel about the future?", ["Not hopeful",1], ["Slightly",2], ["Moderately",3], ["Very Hopeful",4]]
+];
+
+let currentQuestion = 0;
+let score = 0;
+
+const qEl = document.getElementById("q");
+const optEl = document.getElementById("opt");
+const box = document.getElementById("box");
+const center = document.getElementById("center");
+
+const moodData = {
+  burnout: { title: "Mental Burnout", moodName: "Burnout", color: "#0f172a", desc: "Your brain is in a state of prolonged exhaustion due to continuous stress. Dopamine sensitivity has decreased, leading to low motivation and emotional detachment.", signs: "Chronic fatigue, lack of motivation, mental fog, emotional numbness, procrastination", action: "Reduce cognitive load, take intentional rest, limit screen time, and spend time in nature.", songs: [["Agar Tum Saath Ho","https://www.youtube.com/watch?v=sK7riqg2mr4"],["Phir Le Aya Dil","https://www.youtube.com/watch?v=JfZb7Zz9C2I"]] },
+  depressed: { title: "Depressed Mood", moodName: "Depressed", color: "#1e2937", desc: "You seem to be in a low, heavy emotional state. Persistent sadness or emptiness is common in this phase.", signs: "Feeling down, loss of interest, fatigue, hopelessness, changes in appetite/sleep", action: "Talk to someone you trust, maintain routine, gentle movement, consider professional support if it persists.", songs: [["Channa Mereya","https://www.youtube.com/watch?v=5qap5aO7eq0"],["Tum Hi Ho","https://www.youtube.com/watch?v=3f9f3f3f3f3"]] },
+  low: { title: "Low Energy State", moodName: "Low", color: "#334155", desc: "You are currently experiencing lower than normal energy and motivation levels. This is a mild low mood phase.", signs: "Tiredness, feeling 'meh', emotional flatness, difficulty starting tasks", action: "Take a light walk, get sunlight, eat nutritious food, and celebrate small wins.", songs: [["Tum Hi Ho","https://www.youtube.com/watch?v=3f9f3f3f3f3"],["Channa Mereya","https://www.youtube.com/watch?v=5qap5aO7eq0"]] },
+  irritable: { title: "Irritable State", moodName: "Irritable", color: "#854d0e", desc: "You are in a short-tempered and easily frustrated state. Small things may trigger strong reactions.", signs: "Quick to anger, impatience, feeling on edge, low tolerance", action: "Take deep breaths, step away from triggers, light exercise, avoid caffeine.", songs: [["Phir Le Aya Dil","https://www.youtube.com/watch?v=JfZb7Zz9C2I"]] },
+  anxious: { title: "Anxious State", moodName: "Anxious", color: "#b45309", desc: "Your nervous system is in a heightened alert state. The fight-or-flight response is active.", signs: "Worry loops, physical tension, restlessness, racing heart thoughts", action: "Use 5-4-3-2-1 grounding technique, do deep breathing, reduce caffeine.", songs: [["Agar Tum Saath Ho","https://www.youtube.com/watch?v=sK7riqg2mr4"]] },
+  overthinking: { title: "Overthinking Mode", moodName: "Overthinking", color: "#4338ca", desc: "Your mind is racing with too many thoughts. Rumination and 'what if' scenarios are dominating your thinking.", signs: "Racing thoughts, replaying conversations, difficulty sleeping, future anxiety", action: "Do journaling, practice deep breathing, move your body, and try meditation.", songs: [["Raabta","https://www.youtube.com/watch?v=someid"]] },
+  neutral: { title: "Balanced State", moodName: "Neutral", color: "#166534", desc: "You are in a relatively stable and balanced mental state. This is a good foundation to build upon.", signs: "Normal energy, balanced emotions, decent focus and clarity", action: "Maintain healthy habits, practice gratitude, try something new today.", songs: [["Kal Ho Naa Ho","https://www.youtube.com/watch?v=someid"]] },
+  calm: { title: "Calm & Peaceful", moodName: "Calm", color: "#0f766e", desc: "You are in a relaxed and peaceful mental state. Mind feels settled and content.", signs: "Inner peace, low stress, emotional stability, good presence", action: "Enjoy the moment, maintain this balance, gentle activities like reading or walking.", songs: [["Tum Se Hi","https://www.youtube.com/watch?v=mt9xg0mmt28"]] },
+  romantic: { title: "Emotionally Open", moodName: "Romantic", color: "#7c2d12", desc: "You are in an emotionally receptive and warm state. Your heart feels more open to connection and feelings.", signs: "Emotional warmth, nostalgia, longing, increased empathy and softness", action: "Express your feelings, connect with loved ones, listen to music, be creative.", songs: [["Raataan Lambiyan","https://www.youtube.com/watch?v=gvyUuxdRdR4"],["Tum Se Hi","https://www.youtube.com/watch?v=mt9xg0mmt28"]] },
+  euphoric: { title: "Euphoric High", moodName: "Euphoric", color: "#9d174d", desc: "You are in a high dopamine state with excellent motivation, confidence, and mental clarity.", signs: "High energy, excitement, strong drive, mental sharpness", action: "Take immediate action on important goals. Channel this energy productively.", songs: [["Kesariya","https://www.youtube.com/watch?v=BddP6PYo2gs"],["Malang","https://www.youtube.com/watch?v=KBIq11mNB0I"]] }
+};
+
+function getMood(s) {
+  if (s <= 20) return "burnout";
+  if (s <= 26) return "depressed";
+  if (s <= 30) return "low";
+  if (s <= 34) return "irritable";
+  if (s <= 38) return "anxious";
+  if (s <= 42) return "overthinking";
+  if (s <= 46) return "neutral";
+  if (s <= 50) return "calm";
+  if (s <= 53) return "romantic";
+  return "euphoric";
+}
+
+function typeText(text, element, speed = 38, callback = null) {
+  element.innerHTML = "";
+  element.classList.add("glow-text");
+  let i = 0;
+  function type() {
+    if (i < text.length) {
+      element.innerHTML += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    } else if (callback) setTimeout(callback, 700);
+  }
+  type();
+}
+
+function showQuestion() {
+  let q = questions[currentQuestion];
+  qEl.innerText = q[0];
+  optEl.innerHTML = "";
+  for (let j = 1; j <= 4; j++) {
+    let btn = document.createElement("button");
+    btn.innerText = q[j][0];
+    btn.onclick = () => nextQuestion(q[j][1]);
+    optEl.appendChild(btn);
+  }
+}
+
+function nextQuestion(points) {
+  score += points;
+  box.classList.add("fade-out");
+
+  setTimeout(() => {
+    currentQuestion++;
+    if (currentQuestion < questions.length) {
+      showQuestion();
+      box.classList.remove("fade-out");
+    } else {
+      showEndSequence();
+    }
+  }, 380);
+}
+
+function showEndSequence() {
+  box.style.display = "none";
+  center.style.opacity = "1";
+
+  typeText(`You scored ${score} points`, center, 35, () => {
+    const moodKey = getMood(score);
+    const d = moodData[moodKey];
+
+    setTimeout(() => {
+      typeText(`Mood: ${d.moodName}`, center, 42, () => {
+        setTimeout(() => {
+          center.style.opacity = "0";
+          document.body.style.background = d.color;
+
+          setTimeout(() => {
+            showDetailedResult(d);
+          }, 900);
+        }, 1600);
+      });
+    }, 1400);
+  });
+}
+
+function showDetailedResult(d) {
+  const resultDiv = document.createElement("div");
+  resultDiv.className = "result";
+  resultDiv.style.display = "flex";
+
+  const songsHTML = d.songs.map(song => `
+    <div class="song"><a href="${song[1]}" target="_blank">${song[0]}</a></div>
+  `).join("");
+
+  resultDiv.innerHTML = `
+    <div class="card">
+      <div class="title">${d.title}</div>
+      <div class="score-text">You scored <strong>${score}</strong> / 56</div>
+      <div class="mood-name">${d.moodName}</div>
+
+      <div class="section">
+        <div class="label">EXPLANATION</div>
+        <div class="text">${d.desc}</div>
+      </div>
+
+      <div class="section">
+        <div class="label">COMMON SIGNS</div>
+        <div class="text">${d.signs}</div>
+      </div>
+
+      <div class="section">
+        <div class="label">RECOMMENDED ACTION</div>
+        <div class="text">${d.action}</div>
+      </div>
+
+      <div class="section">
+        <div class="label">RECOMMENDED SONGS</div>
+        <div class="songs">${songsHTML}</div>
+      </div>
+
+      <button class="restart-btn" onclick="location.reload()">Take the Quiz Again</button>
+      <button class="home-result-btn" onclick="window.location.href='home.html'">Go to Home</button>
+    </div>
+  `;
+
+  document.body.appendChild(resultDiv);
+}
+
+// Start Quiz
+showQuestion();
+
+</script>
+</body>
+</html>

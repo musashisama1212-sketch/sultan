@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+
+<title>Memories</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Manrope', sans-serif;
+    background: radial-gradient(circle at top, #1a0d14, #0b0b0f 60%);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* 🌙 INTRO */
+.intro {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #120a10, #0b0b0f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    animation: fadeOut 2.5s ease forwards;
+}
+
+.intro-text {
+    font-size: 16px;
+    color: #d8cdd4;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeIn 1.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    80% { opacity: 1; }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* HOME BUTTON */
+.home-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    color: #b8a8b0;
+    font-size: 13px;
+    text-decoration: none;
+    z-index: 10;
+}
+
+/* SECTION */
+.section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 🧊 GLASS CARD */
+.card {
+    width: 85%;
+    max-width: 700px;
+    border-radius: 20px;
+    overflow: hidden;
+
+    background: linear-gradient(
+        135deg,
+        rgba(120,20,40,0.18),
+        rgba(90,60,140,0.18)
+    );
+
+    backdrop-filter: blur(22px);
+    border: 1px solid rgba(255,255,255,0.06);
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+
+    transform: scale(0.75);
+    opacity: 0;
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ACTIVE */
+.card.active {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* IMAGE */
+.card img {
+    width: 100%;
+    display: block;
+}
+
+/* CAPTION */
+.caption {
+    padding: 14px;
+    text-align: center;
+    font-size: 14px;
+    color: #e6d8df;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.25s;
+}
+
+.card.active .caption {
+    opacity: 1;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO -->
+<div class="intro">
+    <div class="intro-text">made with love🙃❤️...</div>
+</div>
+
+<a href="home.html" class="home-btn">home</a>
+
+<!-- COLLAGES -->
+
+<div class="section">
+    <div class="card">
+        <img src="img1.jpg">
+        <div class="caption">cuteness overloaded (scroll down)</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <img src="img2.jpg">
+        <div class="caption">hamesha yaad rahega ye din</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <img src="img3.jpg">
+        <div class="caption">just look at this!</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <img src="img4.jpg">
+        <div class="caption">cute hai naaaa</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <img src="img5.jpg">
+        <div class="caption">peakkk</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="card">
+        <img src="img6.jpg">
+        <div class="caption">my personal fav</div>
+    </div>
+</div>
+
+<script>
+const cards = document.querySelectorAll(".card");
+
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting){
+            entry.target.classList.add("active");
+        }
+    });
+}, { threshold: 0.6 });
+
+cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>for sm1 idm dying for</title>
+
+<style>
+
+body{
+margin:0;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+font-family:Segoe UI, sans-serif;
+color:white;
+text-align:center;
+background:black;
+overflow:hidden;
+}
+
+/* star container */
+
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+z-index:-1;
+}
+
+/* star style */
+
+.star{
+position:absolute;
+width:2px;
+height:2px;
+background:white;
+border-radius:50%;
+animation:twinkle 2s infinite alternate;
+}
+
+@keyframes twinkle{
+0%{
+opacity:.3;
+box-shadow:0 0 2px white;
+}
+100%{
+opacity:1;
+box-shadow:0 0 8px white,0 0 15px white;
+}
+}
+
+/* title */
+
+h1{
+font-size:16px;
+font-weight:300;
+letter-spacing:3px;
+color:white;
+
+background:linear-gradient(90deg,#ffffff,#b8a9ff,#ffffff);
+background-size:200%;
+
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+animation:galaxyFlow 6s linear infinite, starGlow 3s ease-in-out infinite alternate;
+
+margin-bottom:25px;
+}
+
+@keyframes galaxyFlow{
+0%{background-position:0%;}
+100%{background-position:200%;}
+}
+
+@keyframes starGlow{
+0%{
+text-shadow:
+0 0 4px rgba(255,255,255,0.4),
+0 0 8px rgba(180,160,255,0.3);
+}
+100%{
+text-shadow:
+0 0 6px rgba(255,255,255,0.8),
+0 0 14px rgba(180,160,255,0.6),
+0 0 22px rgba(255,255,255,0.5);
+}
+}
+
+/* input */
+
+input{
+width:260px;
+padding:14px 16px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.25);
+background:rgba(255,255,255,0.05);
+color:white;
+font-size:15px;
+outline:none;
+backdrop-filter:blur(10px);
+transition:0.25s;
+}
+
+input::placeholder{
+color:rgba(255,255,255,0.6);
+}
+
+input:focus{
+border:1px solid #9b5cff;
+box-shadow:0 0 12px rgba(155,92,255,0.6);
+}
+
+/* button */
+
+button{
+margin-top:15px;
+padding:12px 20px;
+border:none;
+border-radius:8px;
+background:linear-gradient(135deg,#7b2ff7,#f107a3);
+color:white;
+font-size:14px;
+cursor:pointer;
+transition:0.25s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 0 12px rgba(255,255,255,0.3);
+}
+
+/* SUCCESS BOX */
+
+.success-box{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(.8);
+background:rgba(20,20,30,0.9);
+border:1px solid rgba(255,255,255,0.1);
+border-radius:12px;
+padding:30px 50px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+opacity:0;
+animation:popBox .6s forwards;
+}
+
+/* box animation */
+
+@keyframes popBox{
+0%{
+opacity:0;
+transform:translate(-50%,-50%) scale(.6);
+}
+100%{
+opacity:1;
+transform:translate(-50%,-50%) scale(1);
+}
+}
+
+/* checkmark circle */
+
+.check{
+width:60px;
+height:60px;
+border-radius:50%;
+border:3px solid #4cff88;
+display:flex;
+align-items:center;
+justify-content:center;
+position:relative;
+}
+
+/* checkmark */
+
+.check:after{
+content:"";
+width:14px;
+height:28px;
+border-right:4px solid #4cff88;
+border-bottom:4px solid #4cff88;
+transform:rotate(45deg) scale(0);
+animation:drawCheck .5s .4s forwards;
+}
+
+/* check animation */
+
+@keyframes drawCheck{
+to{
+transform:rotate(45deg) scale(1);
+}
+}
+
+/* text */
+
+.success-text{
+font-size:18px;
+letter-spacing:2px;
+color:#4cff88;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<h1>Hello-sorry, this was made for someone specific.<br> Who are you?</h1>
+
+<form onsubmit="checkName(event)">
+<input type="text" id="name" placeholder="Enter your name">
+<br>
+<button type="submit">Enter</button>
+</form>
+
+<script>
+
+/* stars */
+
+let container=document.getElementById("stars");
+
+for(let i=0;i<150;i++){
+let star=document.createElement("div");
+star.className="star";
+
+star.style.top=Math.random()*100+"vh";
+star.style.left=Math.random()*100+"vw";
+star.style.animationDuration=(Math.random()*3+1)+"s";
+
+container.appendChild(star);
+}
+
+/* name check */
+
+function checkName(event){
+
+event.preventDefault();
+
+let name=document.getElementById("name").value.toLowerCase().trim();
+
+let allowed = ["saamiya","samosa","sameeha","cutie","kuchupuchu","chidkokli"];
+
+let isAllowed = allowed.some(word => name.includes(word));
+
+if(isAllowed){
+
+let box=document.createElement("div");
+box.className="success-box";
+
+box.innerHTML=`
+<div class="check"></div>
+<div class="success-text">Access Granted</div>
+`;
+
+document.body.appendChild(box);
+
+setTimeout(()=>{
+window.location.href="home.html";
+},2000);
+
+}
+
+else{
+alert("Sorry, aap allowed nahi.");
+}
+
+}
+
+</script>
+
+</body>
+</html>
